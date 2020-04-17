@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>请求响应Ajax代码</title>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script type="text/javascript">
+	function showAjaxError(XMLHttpRequest, textStatus, errorThrown) {
+		//readyState状态吗
+		// 		0 － （未初始化）还没有调用send()方法
+		// 		1 － （载入）已调用send()方法，正在发送请求
+		// 		2 － （载入完成）send()方法执行完成，已经接收到全部响应内容
+		// 		3 － （交互）正在解析响应内容
+		// 		4 － （完成）响应内容解析完成，可以在客户端调用了
+		var message = "status="+XMLHttpRequest.status+"\n";
+		message += "readyState="+XMLHttpRequest.readyState+"\n";
+		message += "textStatus="+textStatus+"\n";
+		message += "errorThrown="+errorThrown+"\n"; 
+		message += "XMLHttpRequest.responseText="+XMLHttpRequest.responseText+"\n";
+		alert(message);
+	}
+	$(function() { 
+		$("#echoStringByStringButton")
+				.click(
+						function() {
+							var url = "demo/echo/echoStringByString/"
+									+ $("#echoStringByStringData").val();
+							$.ajax({
+								type : "GET",
+								url : url,
+								success : function(data) {
+									$("#echoStringByStringResult").html(
+											"返回结果为:" + JSON.stringify(data));
+								},
+								error : showAjaxError
+							});
+						});
+		$("#echoStringByStringAndDateButton")
+				.click(
+						function() {
+							var url = "demo/echo/echoStringByStringAndDate";
+							var data = {
+								"value" : $("#echoStringByStringAndDateString")
+										.val(),
+								"date" : $("#echoStringByStringAndDateDate")
+										.val()
+							};
+							$.ajax({
+								type : "GET",
+								url : url,
+								data : data,
+								success : function(data) {
+									$("#echoStringByStringAndDateResult").html(
+											"返回结果为:" + JSON.stringify(data));
+								},
+								error : showAjaxError
+							});
+						});
+		$("#echoStringByObjectButton").click(
+				function() {
+					var jsondata = $("#echoStringByObjectData").val();
+					var jsonobj = JSON.parse(jsondata);
+					$.ajax({
+						type : "POST",
+						url : "demo/echo/echoStringByObject",
+						data : JSON.stringify(jsonobj),
+						contentType : "application/json",
+						success : function(data) {
+							$("#echoStringByObjectResult").html(
+									"返回结果为:" + JSON.stringify(data));
+						},
+						error : showAjaxError
+					});
+				});
+
+		$("#echoObjectByStringButton").click(
+				function() {
+					var url = "demo/echo/echoObjectByString/"
+							+ $("#echoObjectByStringData").val();
+					$.ajax({
+						type : "GET",
+						url : url,
+						success : function(data) {
+							$("#echoObjectByStringResult").html(
+									"返回结果为:" + JSON.stringify(data));
+						},
+						error : showAjaxError
+					});
+				});
+		$("#echoObjectByObjectButton").click(
+				function() {
+					var jsondata = $("#echoObjectByObjectData").val();
+					var jsonobj = JSON.parse(jsondata);
+					$.ajax({
+						type : "POST",
+						url : "demo/echo/echoObjectByObject",
+						data : JSON.stringify(jsonobj),
+						contentType : "application/json",
+						success : function(data) {
+							$("#echoObjectByObjectResult").html(
+									"返回结果为:" + JSON.stringify(data));
+						},
+						error : showAjaxError
+					});
+				});
+	});
+</script>
+</head>
+<body> 
+	<h1>Ajax 请求验证 <a href="swagger-ui.html" target="_new">Api文档 和 测试</a> <a href="monitoring" target="_new">JavaMelody监控</a></h1>
+	<h2>传入参数为Object的，都需要使用POST方法</h2> 
+	<hr />
+	echoStringByString
+	<br>String对象
+	<br>
+	<textarea id="echoStringByStringData" cols="80" rows="3">我就是传说中的Hello World,小名echoStringByString</textarea>
+	<br>
+	<font color="red" id="echoStringByStringResult"></font>
+	<br>
+	<button id="echoStringByStringButton">Do echoStringByString</button>
+	<hr />
+
+	echoStringByStringAndDate
+	<br>String对象|Date对象
+	<br>
+	<textarea id="echoStringByStringAndDateString" cols="80" rows="3">我是echoStringByStringAndDate</textarea>
+	<textarea id="echoStringByStringAndDateDate" cols="80" rows="3">2016-08-12 17:54:31</textarea>
+	<br>
+	<font color="red" id="echoStringByStringAndDateResult"></font>
+	<br>
+	<button id="echoStringByStringAndDateButton">Do
+		echoStringByStringAndDate</button>
+	<hr />
+
+	echoStringByObject
+	<br>JSON对象
+	<br>
+	<textarea id="echoStringByObjectData" cols="80" rows="3">{"value":"我是echoStringByObject的value值","time":"2016-08-12 17:54:31"}</textarea>
+	<br>
+	<font color="red" id="echoStringByObjectResult"></font>
+	<br>
+
+	<button id="echoStringByObjectButton">Do echoStringByObject</button>
+	<hr />
+
+	echoObjectByString
+	<br>JSON对象
+	<br>
+	<textarea id="echoObjectByStringData" cols="80" rows="3">我是echoObjectByString</textarea>
+	<br>
+	<font color="red" id="echoObjectByStringResult"></font>
+	<br>
+
+	<button id="echoObjectByStringButton">Do echoObjectByString</button>
+	<hr />
+
+	echoObjectByObject
+	<br>JSON对象
+	<br>
+	<textarea id="echoObjectByObjectData" cols="80" rows="3">{"value":"我是echoObjectByObject的value值","time":"2016-08-12 17:54:31"}</textarea>
+	<br>
+	<font color="red" id="echoObjectByObjectResult"></font>
+	<br>
+	<button id="echoObjectByObjectButton">Do echoObjectByObject</button>
+</body>
+</html>

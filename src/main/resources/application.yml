@@ -1,0 +1,117 @@
+tsf:
+  swagger:
+    enabled: false
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming: 
+        #添加命名规则
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+  application:
+    name: "01014013"
+  jackson:
+    serialization:
+      indent-output: true
+    locale: zh_CN
+    time-zone: Asia/Shanghai
+    joda-date-time-format: yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd HH:mm:ss
+    deserialization:
+      accept-empty-string-as-null-object: true
+  messages:
+    basename: i18n/defalultMessages,i18n/messages,i18n/exception #指定message的basename，多个以逗号分隔，如果不加包名的话，默认从classpath路径开始，默认: messages
+    encoding: UTF-8 #设定Message bundles的编码，默认: UTF-8
+  # type: com.alibaba.druid.pool.DruidDataSource
+  datasource: #数据源配置
+    url: jdbc:postgresql://10.156.129.39:5432/zpf
+    username: riskcontrol
+    password: riskcontrol@123
+      #本机
+#    url: jdbc:postgresql://localhost:5432/riskcontrol
+#    username: postgres
+#    password: 123456
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5 #最小空闲连接数，默认和maximum-pool-size值一样(性能测试和生产环境时不要设置，保持固定连接池)
+      maximum-pool-size: 150 # 连接池中可同时连接的最大连接数, 当池中没有空闲连接可用时,就会阻塞直到超出connectionTimeout设定的数值
+  mvc:
+    date-format: yyyy-MM-dd HH:mm:ss
+  cache:
+    type: redis
+    redis:
+      time-to-live: 5m
+  cloud:
+    consul:
+      discovery:
+        instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+        prefer-ip-address: true
+  redis:
+    host: 10.10.2.241
+    port: 6379
+  #工作流配置
+  activiti:
+    #是否每次都更新数据库
+    database-schema-update: true
+    # 检查/processes下流程文件
+    check-process-definitions: false
+    # 保存所有历史记录
+    history-level: full
+server:
+  port: 15020
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+      echo-server:
+        loggerLevel: full
+        errorDecoder: pdfc.framework.cloud.feign.codec.NotBreakMessageErrorDecoder
+      echo-server2:
+        loggerLevel: full
+        errorDecoder: pdfc.framework.cloud.feign.codec.KeepMessageErrorDecoder
+
+framework:
+  swagger:
+    #    enabled: true #使用默认配置类
+    title: API接口文档
+    description: Api Documentation
+    version: 1.0.0
+    terms-of-service-url: http://10.10.4.66
+    use-default-response-messages: false
+    contact:
+      name: zhouxianli
+      url: http://10.10.4.66
+      email: zhouxianli@126.com
+  aoplog:
+    userHeader: sysUserCode
+#jwt生成和解析配置
+jwt:
+  expiration: 86400
+  header: Authorization
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+  secret: arch6Secret
+  tokenHead: PDFC
+  alg: HS256
+#调用中台服务配置
+resttemplate:
+  headers:
+    authorization: PDFC b23544c7-1dda.-4ff7-83e7-.c31eda374b75 #配置认证的token
+    group: p03-01 #调用方分组
+    version: 1.1 #配置接口
+    contentType: application/json #配置数据格式
